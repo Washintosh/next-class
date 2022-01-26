@@ -44,7 +44,7 @@ const HomePage = ({ meetups }) => {
 
 export const getStaticProps = async (context) => {
   const params = context.params;
-  const connection = await MongoClient.connect(process.env.REACT_APP_MONGO_URI);
+  const connection = await MongoClient.connect(process.env.MONGO_URI);
   const dataBase = connection.db();
   const meetupsCollection = dataBase.collection("meetups");
   const allMeetups = await meetupsCollection.find().toArray(); //Se debe convertir a array para que no de error

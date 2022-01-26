@@ -7,9 +7,7 @@ import { MongoClient } from "mongodb";
 
 const handler = async (req, res) => {
   if (req.method === "POST") {
-    const connection = await MongoClient.connect(
-      process.env.REACT_APP_MONGO_URI
-    );
+    const connection = await MongoClient.connect(process.env.MONGO_URI);
     //Igual que con el mongoose usado en Express, se utiliza connect para realizar la conexión con la base de datos. Solo que aquí no se utiliza el mongoose.connect(), sino que se utiiza el MongoClient.connect()
     //La única diferencia que al usar el mongoose, esta se debe almacenar en una variable para que luego se extraiga la base de datos.
     const dataBase = connection.db(); //Se crea la base de datos con el nombre que se ha dado en el connection string
