@@ -1,10 +1,9 @@
 import { MongoClient } from "mongodb";
 
+require("dotenv").config();
 const meetups = async (req, res) => {
   if (req.method === "GET") {
-    const connection = await MongoClient.connect(
-      "mongodb+srv://washington:12345@nodeexpressprojects.5xqne.mongodb.net/meetups?retryWrites=true&w=majority"
-    );
+    const connection = await MongoClient.connect(process.env.MONGO_URI);
     const dataBase = connection.db();
     const meetupsCollection = dataBase.collection("meetups");
     const allMeetups = await meetupsCollection.find();

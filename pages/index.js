@@ -42,11 +42,11 @@ const HomePage = ({ meetups }) => {
 //En Next, esto no ocurre en el caso de que no exista data fetching. Cuando no ocurre, el código fuente de la página sí muestra todos los componentes que conforman la página web, sin embargo, cuando ocurre data fetching, esto no ocurre así debido a que al realizar el data fetching normalmente ocurren dos renderizaciones, en la primera se utiliza el useEffect para así realizar el fetch de información y usar el useState para añadir la información a la variable, pero este provoca otra renderización en la cual ya se muestra la información que fue requerida. Lo que pasa es que Next solamente muestra los datos que fueron pre renderizados la primera vez en el HTML, por lo que en ese no va a salir la información que recién se va a pedir a un servidor.
 //Para solucionar este problema, antes de exportar el componente, se realiza una exportación nombrada de una función llamada getStaticProps. Esta función no va a ser ejecutada en el cliente, sino en el servidor en el momento que se realice el desplegue de la aplicación, por lo que dentro de esta función se puede realizar el fetch de la data para que así esto se ejecute en el servidor, y luego cuando ya llegue al cliente, llegue el HTML con toda la información ya obtenida. Esta función siempre retorna un objeto con una propiedad llamada props, el cual va a ser las propiedades del componente de la página. Y dentro de props se puede poner un objeto con toda la información que se necesita correr en el servidor antes de que llegue al cliente. Así ya no es necesario utilizar el useEffect ni el useState
 
+require("dotenv").config();
+
 export const getStaticProps = async (context) => {
   const params = context.params;
-  const connection = await MongoClient.connect(
-    "mongodb+srv://washington:12345@nodeexpressprojects.5xqne.mongodb.net/meetups?retryWrites=true&w=majority"
-  );
+  const connection = await MongoClient.connect(process.env.MONGO_URI);
   const dataBase = connection.db();
   const meetupsCollection = dataBase.collection("meetups");
   const allMeetups = await meetupsCollection.find().toArray(); //Se debe convertir a array para que no de error

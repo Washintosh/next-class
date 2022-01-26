@@ -5,14 +5,14 @@ import classes from "../components/meetups/MeetupDetails.module.css"; //Se puede
 
 import { MongoClient, ObjectId } from "mongodb";
 import Head from "next/head";
+require("dotenv").config();
 
 export const getStaticPaths = async () => {
   //Esta función siempre debe ser llamada cuando se use el getStaticProps y antes de esta última. Esta función debe retornar un objeto con la propiedad de paths, el cual va a tener un arrays de objetos con cada uno de los params para cada una de las rutas.
   //Otra propiedad que debe tener el objeto es el fallback el cual si es falso, significa que todas las rutas están descritas en el paths, por lo que si una no se encuentra, va a dar un error 404. Por el contrario si es verdadero, esto significa que no todas las rutas se encuentran en los paths, por lo que next intentará crear una.
 
-  const connection = await MongoClient.connect(
-    "mongodb+srv://washington:12345@nodeexpressprojects.5xqne.mongodb.net/meetups?retryWrites=true&w=majority"
-  );
+  const connection = await MongoClient.connect(process.env.MONGO_URI);
+
   const dataBase = connection.db();
   const meetupsCollection = dataBase.collection("meetups");
   const allMeetups = await meetupsCollection.find({}, { _id: 1 }).toArray();
@@ -31,9 +31,8 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async (context) => {
   const { meetupId } = context.params;
-  const connection = await MongoClient.connect(
-    "mongodb+srv://washington:12345@nodeexpressprojects.5xqne.mongodb.net/meetups?retryWrites=true&w=majority"
-  );
+  const connection = await MongoClient.connect(process.env.MONGO_URI);
+
   const dataBase = connection.db();
   const meetupsCollection = dataBase.collection("meetups");
   const singleMeetup = await meetupsCollection.findOne({
