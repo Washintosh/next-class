@@ -8,7 +8,7 @@ import Head from "next/head";
 
 export const getStaticPaths = async () => {
   //Esta función siempre debe ser llamada cuando se use el getStaticProps y antes de esta última. Esta función debe retornar un objeto con la propiedad de paths, el cual va a tener un arrays de objetos con cada uno de los params para cada una de las rutas.
-  //Otra propiedad que debe tener el objeto es el fallback el cual si es falso, significa que todas las rutas están descritas en el paths, por lo que si una no se encuentra, va a dar un error 404. Por el contrario si es verdadero, esto significa que no todas las rutas se encuentran en los paths, por lo que next intentará crear una.
+  //Otra propiedad que debe tener el objeto es el fallback el cual si es falso, significa que todas las rutas están descritas en el paths, por lo que si una no se encuentra, va a dar un error 404. Por el contrario si es verdadero, esto significa que no todas las rutas se encuentran en los paths, por lo que next intentará crear una. El problema de usar false es que las rutas especificadas son solamente aquellas descritas antes del despliegue de la aplicación, por lo que al añadir otra ruta luego del despliegue, esta no va a ser considerada. La diferencia entre true y blocking es que true primero muestra la página vacía y luego la carga, mientras que blocking no muestra nada hasta que carga la página.
 
   const connection = await MongoClient.connect(process.env.MONGO_URI);
 
@@ -19,7 +19,7 @@ export const getStaticPaths = async () => {
   console.log(allMeetups);
 
   return {
-    fallback: false,
+    fallback: "blocking",
     paths: allMeetups.map((i) => ({
       params: {
         meetupId: i._id.toString(),
